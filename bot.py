@@ -21,7 +21,7 @@ def download_video(message):
             'format': 'bestvideo+bestaudio/best',  # Загружаем лучшее видео и аудио
             'outtmpl': 'downloads/%(id)s.%(ext)s',  # Путь для сохранения
             'quiet': True,  # Без лишних выводов
-            'cookies': 'cookies.json',  # Указываем путь к файлу с куками
+            'cookies': 'cookies.txt',  # Указываем путь к файлу с куками
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
