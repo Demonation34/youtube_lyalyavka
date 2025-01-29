@@ -1,6 +1,6 @@
 import os
 import telebot
-import youtube_dl
+import yt_dlp as youtube_dl  # Используем yt-dlp
 
 # Токен бота
 TOKEN = os.getenv("BOT_TOKEN")  # Переменная окружения на Railway
@@ -16,11 +16,12 @@ def download_video(message):
     bot.reply_to(message, "Загружаю видео, подожди...")
 
     try:
-        # Параметры для youtube_dl
+        # Параметры для yt-dlp с куками
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',  # Загружаем лучшее видео и аудио
             'outtmpl': 'downloads/%(id)s.%(ext)s',  # Путь для сохранения
             'quiet': True,  # Без лишних выводов
+            'cookies': 'cookies.json',  # Указываем путь к файлу с куками
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
