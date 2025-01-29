@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 COPY . /app/
 
 # Запуск вашего бота
-CMD ["python", "your_bot_script.py"]
+CMD ["python", "bot.py"]
