@@ -1,3 +1,4 @@
 pytube
 pyTelegramBotAPI
 youtube_dl
+yt-dlp
