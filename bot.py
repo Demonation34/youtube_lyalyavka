@@ -1,6 +1,6 @@
 import os
 import telebot
-from pytube import YouTube
+import youtube_dl
 
 # Токен бота
 TOKEN = os.getenv("BOT_TOKEN")  # Переменная окружения на Railway
@@ -16,20 +16,23 @@ def download_video(message):
     bot.reply_to(message, "Загружаю видео, подожди...")
 
     try:
-        yt = YouTube(url)
+        # Параметры для youtube_dl
+        ydl_opts = {
+            'format': 'bestvideo+bestaudio/best',  # Загружаем лучшее видео и аудио
+            'outtmpl': 'downloads/%(id)s.%(ext)s',  # Путь для сохранения
+            'quiet': True,  # Без лишних выводов
+        }
 
-        # Выбираем поток с наилучшим качеством (MP4)
-        video = yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first()
-
-        # Загружаем видео
-        file_path = video.download()
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(url, download=True)
+            video_file = ydl.prepare_filename(info_dict)  # Получаем путь к файлу
 
         # Отправляем видео пользователю
-        with open(file_path, "rb") as video_file:
-            bot.send_video(message.chat.id, video_file)
+        with open(video_file, 'rb') as video:
+            bot.send_video(message.chat.id, video)
 
         # Удаляем видео после отправки
-        os.remove(file_path)
+        os.remove(video_file)
 
     except Exception as e:
         bot.reply_to(message, f"Ошибка при скачивании: {e}")
